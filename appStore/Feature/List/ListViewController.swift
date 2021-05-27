@@ -61,11 +61,10 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let dto
-//        let brand = self.vm.dto.value.subBrands[indexPath.row]
-//        LogEvent.BRANDSHOP_Tab_TextBrand.value("no\(indexPath.row)_\(brand.brandNameEng.convertGA)").selectContent()
-//        let productsViewController = ProductsViewController(title: brand.name, mode: .stickyFilter, contentType: .brand(brand.id))
-//        self.parent?.navigationController?.pushViewController(productsViewController, animated: true)
+        let data = vm.item(indexPath.row)
+        let vc = DetailViewController()
+        vc.bind(data)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
