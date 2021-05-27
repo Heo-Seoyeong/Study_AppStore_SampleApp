@@ -11,9 +11,10 @@ import RxSwift
 import RxCocoa
 
 class ListViewModel: BaseViewModel {
+    
     private let repo = ListRepository()
     
-    let getHomeData: PublishSubject<[ListDTO]> = PublishSubject()
+    let dto: BehaviorRelay<[ListDTO]> = BehaviorRelay(value: [])
     
     func fetchHomeData(name: String = "", showLoading: Bool = true) {
         if showLoading {
@@ -21,7 +22,7 @@ class ListViewModel: BaseViewModel {
         }
         
         callDto(observableDto: repo.getAppStoreData(name: name)) { [weak self] dto in
-            self?.getHomeData.onNext(dto)
+            self?.dto.accept(dto)
         } onFailure: {
             if showLoading {
                 LoaderView.shared.hide()
@@ -32,4 +33,5 @@ class ListViewModel: BaseViewModel {
             }
         }
     }
+    
 }

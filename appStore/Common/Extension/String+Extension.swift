@@ -6,7 +6,7 @@
 //  Copyright © 2020 Funnc. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension String {
     public var localized: String {
@@ -47,4 +47,16 @@ extension String {
     var convertGA: String {
         return self.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression)
     }
+
+    func toLineSpacedString(lineHeight: CGFloat = 1.2, fontSize: CGFloat = 15, bold: Bool = false, align: NSTextAlignment = .left) -> NSMutableAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = lineHeight
+        paragraphStyle.alignment = align
+        let attrString = NSMutableAttributedString(string: self, attributes: [
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: fontSize),
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ])
+        return attrString
+    }
+    
 }
