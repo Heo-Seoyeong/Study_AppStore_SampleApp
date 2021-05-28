@@ -29,12 +29,13 @@ struct DetailDTO {
     let minimumOsVersion: String
     let languageCodesISO2A: [String]
     let sellerUrl: URL?
-    let shareUrl: URL?
+    let trackViewUrl: URL?
+    let artistViewUrl: URL?
 
-    init(_ data: AppStoreData) {
+    init(_ data: ListDTO) {
         trackName = data.trackName
         artistName = data.artistName
-        appIcon = data.artworkUrl512
+        appIcon = data.appIcon
         averageUserRating = data.averageUserRating
         userRatingCount = data.userRatingCount
         genre = data.genres.first ?? ""
@@ -52,8 +53,13 @@ struct DetailDTO {
         minimumOsVersion = data.minimumOsVersion
         languageCodesISO2A = data.languageCodesISO2A
         sellerUrl = data.sellerUrl
-        shareUrl = data.trackViewUrl
+        trackViewUrl = data.trackViewUrl
+        artistViewUrl = data.artistViewUrl
     }
+    
+}
+
+extension DetailDTO {
     
     func detailContents() -> [(DetailInformationContent, String)] {
         return DetailInformationContent.allCases.compactMap { type in
@@ -87,10 +93,6 @@ struct DetailDTO {
         }
     }
     
-}
-
-extension DetailDTO {
-    
     func descBytes(_ bytes: String) -> String {
         if let bytes = Float(bytes) {
             return "\(round(bytes / 1024.0 / 1024.0 * 10) / 10)MB"
@@ -102,16 +104,16 @@ extension DetailDTO {
     
     func descSupportedDevice(_ devices: [String], _ minimumOsVersion: String) -> String {
         let enableDevices: [Devices] = Array(Set(devices.compactMap {
-            if $0.contains(Devices.iPhone.rawValue) {
+            switch $0 {
+            case let str where str.contains(Devices.iPhone.rawValue):
                 return .iPhone
+            case let str where str.contains(Devices.iPad.rawValue):
+                return .iPhone
+            case let str where str.contains(Devices.iPod.rawValue):
+                return .iPhone
+            default:
+                return nil
             }
-            if $0.contains(Devices.iPad.rawValue) {
-                return .iPad
-            }
-            if $0.contains(Devices.iPod.rawValue) {
-                return .iPod
-            }
-            return nil
         }))
         
         var deviceDesc: String = "iOS \(minimumOsVersion) 버전 이상이 필요."

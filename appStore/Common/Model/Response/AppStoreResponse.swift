@@ -7,51 +7,59 @@
 
 import Foundation
 
+struct AppStoreRootResponse: Codable {
+    
+    let resultCount: Int
+    let results: [AppStoreResponse]
+    
+}
+
+
 struct AppStoreResponse: Codable {
     
-    var screenshotUrls: [String]?
-    var ipadScreenshotUrls: [String]?
-    var appletvScreenshotUrls: [String]?
-    var artworkUrl512: String?
-    var artworkUrl60: String?
-    var artworkUrl100: String?
-    var artistViewUrl: String?
-    var supportedDevices: [String]?
-    var advisories: [String]?
-    var isGameCenterEnabled: Bool?
-    var features: [String]?
-    var kind: String?
-    var minimumOsVersion: String?
-    var languageCodesISO2A: [String]?
-    var fileSizeBytes: String?
-    var sellerUrl: String?
-    var formattedPrice: String?
-    var averageUserRatingForCurrentVersion: Double?
-    var userRatingCountForCurrentVersion: Int?
-    var trackContentRating: String?
-    var averageUserRating: Double?
-    var trackCensoredName: String?
-    var trackViewUrl: String?
-    var contentAdvisoryRating: String?
-    var genreIds: [String]?
-    var trackId: Int64?
-    var trackName: String?
-    var releaseDate: String?
-    var sellerName: String?
-    var primaryGenreName: String?
-    var isVppDeviceBasedLicensingEnabled: Bool?
-    var currentVersionReleaseDate: String?
-    var releaseNotes: String?
-    var primaryGenreId: Int64?
-    var currency: String?
-    var description: String?
-    var artistId: Int64?
-    var artistName: String?
-    var genres: [String]?
-    var price: Double?
-    var bundleId: String?
-    var version: String?
-    var wrapperType: String?
-    var userRatingCount: Int?
+    let screenshotUrls: [String]?
+    let ipadScreenshotUrls: [String]?
+    let appletvScreenshotUrls: [String]?
+    let artworkUrl512: String?
+    let artworkUrl60: String?
+    let artworkUrl100: String?
+    let artistViewUrl: String?
+    let supportedDevices: [String]?
+    let advisories: [String]?
+    let isGameCenterEnabled: Bool?
+    let features: [String]?
+    let kind: String?
+    let minimumOsVersion: String?
+    let languageCodesISO2A: [String]?
+    let fileSizeBytes: String?
+    let sellerUrl: String?
+    let formattedPrice: String?
+    let averageUserRatingForCurrentVersion: Double?
+    let userRatingCountForCurrentVersion: Int?
+    let trackContentRating: String?
+    let averageUserRating: Double?
+    let trackCensoredName: String?
+    let trackViewUrl: String?
+    let contentAdvisoryRating: String?
+    let genreIds: [String]?
+    let trackId: Int64?
+    let trackName: String?
+    let releaseDate: String?
+    let sellerName: String?
+    let primaryGenreName: String?
+    let isVppDeviceBasedLicensingEnabled: Bool?
+    let currentVersionReleaseDate: String?
+    let releaseNotes: String?
+    let primaryGenreId: Int64?
+    let currency: String?
+    let description: String?
+    let artistId: Int64?
+    let artistName: String?
+    let genres: [String]?
+    let price: Double?
+    let bundleId: String?
+    let version: String?
+    let wrapperType: String?
+    let userRatingCount: Int?
 
 }

@@ -1,19 +1,19 @@
 //
-//  ScreenshotCell.swift
+//  DetailScreenshotCell.swift
 //  appStore
 //
-//  Created by seoyeong on 2021/05/27.
+//  Created by seoyeong on 2021/05/28.
 //
 
 import UIKit
 
-class ScreenshotCell: UICollectionViewCell {
+class DetailScreenshotCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     
 }
 
-extension ScreenshotCell {
+extension DetailScreenshotCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,7 +25,7 @@ extension ScreenshotCell {
     
 }
 
-extension ScreenshotCell {
+extension DetailScreenshotCell {
     
     func bind(_ url: URL) {
         do {

@@ -9,41 +9,43 @@ import Foundation
 
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 class ListViewModel: BaseViewModel {
     
-    private let repo = ListRepository()
+    enum ListInfo {
+        case recent(String)
+        case search(ListDTO)
+        case noresult
+    }
     
-    let dto: BehaviorRelay<[ListDTO]> = BehaviorRelay(value: [])
+    let dto: BehaviorRelay<[SectionModel<String, ListInfo>]> = BehaviorRelay(value: [])
     
-    private let data: BehaviorRelay<[AppStoreData]> = BehaviorRelay(value: [])
+    func action(name: String = "") {
+        if name.isEmpty {
+            self.fetchRecentData()
+        } else {
+            self.fetchAppStoreData(name: name)
+        }
+        
+    }
     
-    func fetchHomeData(name: String = "", showLoading: Bool = true) {
+    private func fetchAppStoreData(name: String = "", showLoading: Bool = true) {
         if showLoading {
             LoaderView.shared.show()
         }
         
-        callDto(observableDto: repo.getAppStoreData(name: name)) { [weak self] data in
-            guard let self = self else { return }
+        callDto(observableDto: ListRepository().getAppStoreData(name: name)) { [weak self] dto in
+            self?.saveRecent(name)
             
-            let listDto: [ListDTO] = data.compactMap {
-                var screenshotList = [URL]()
-                switch UIDevice.current.userInterfaceIdiom {
-                case .phone: screenshotList = $0.screenshotUrls.compactMap { $0 }
-                case .pad: screenshotList = $0.ipadScreenshotUrls.compactMap { $0 }
-                default: break
-                }
-                
-                return ListDTO(searchName: name,
-                               trackName: $0.trackName,
-                               artistName: $0.artistName,
-                               averageUserRating: $0.averageUserRating,
-                               userRatingCount: $0.userRatingCount,
-                               appIcon: $0.artworkUrl512,
-                               screenshotList: screenshotList)
+            if dto.isEmpty {
+                let model = [SectionModel<String, ListInfo>(model: "결과 없음", items: [ListInfo.noresult])]
+                self?.dto.accept(model)
+            } else {
+                let model = [SectionModel<String, ListInfo>(model: "검색 결과", items: dto.compactMap { ListInfo.search($0) })]
+                self?.dto.accept(model)
             }
-            self.dto.accept(listDto)
-            self.data.accept(data)
+            
         } onFailure: {
             if showLoading {
                 LoaderView.shared.hide()
@@ -54,9 +56,15 @@ class ListViewModel: BaseViewModel {
             }
         }
     }
-
-    func item(_ index: Int) -> AppStoreData {
-        return data.value[index]
+    
+    private func fetchRecentData() {
+        let recents: [String] = []
+        let model = [SectionModel<String, ListInfo>(model: "최근 검색어", items: recents.compactMap { ListInfo.recent($0) })]
+        self.dto.accept(model)
+    }
+    
+    private func saveRecent(_ keyword: String) {
+        guard !keyword.isEmpty else { return }
     }
     
 }

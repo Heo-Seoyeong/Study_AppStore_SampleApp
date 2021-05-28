@@ -102,8 +102,7 @@ extension DetailViewController {
 
 extension DetailViewController {
     
-    func bind(_ data: AppStoreData) {
-        let dto = DetailDTO(data)
+    func bind(_ dto: DetailDTO) {
         nameLabel.text = dto.trackName
         artistLabel.text = dto.artistName
         
@@ -116,7 +115,7 @@ extension DetailViewController {
         rateLabel.text = String(format: "%.1f", dto.averageUserRating)
         rateDetailLabel.text = String(format: "%.1f", dto.averageUserRating)
         
-        reviewCountLabel.text = data.userRatingCount == 0 ? "평가 없음" : "\(dto.userRatingCount)개의 평가"
+        reviewCountLabel.text = dto.userRatingCount == 0 ? "평가 없음" : "\(dto.userRatingCount)개의 평가"
         reviewCountDetailLabel.text =  "\(dto.userRatingCount)개의 평가"
         
         genreLabel.text = dto.genres.first
@@ -124,16 +123,16 @@ extension DetailViewController {
         showIPadScreenshotsButton.isUserInteractionEnabled = !dto.ipadScreenshotUrls.isEmpty
         iconScreenshotImageView.isHidden = dto.ipadScreenshotUrls.isEmpty
         screenshotTitleLabel.text = dto.ipadScreenshotUrls.isEmpty ? "iPhone" : "iPad용 앱 제공"
-        
+       
         Observable.of(dto.ipadScreenshotUrls)
-            .bind(to: iPhoneCollectionView.rx.items(cellIdentifier: "ScreenshotCell", cellType: ScreenshotCell.self)) { _, item, cell in
+            .bind(to: iPhoneCollectionView.rx.items(cellIdentifier: "DetailScreenshotCell", cellType: DetailScreenshotCell.self)) { _, item, cell in
                 cell.bind(item)
                 cell.imageView.heightAnchor.constraint(equalToConstant: self.iPhoneCollectionView.frame.height - 10).isActive = true
                 cell.imageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         }.disposed(by: bag)
         
         Observable.of(dto.ipadScreenshotUrls)
-            .bind(to: iPadCollectionView.rx.items(cellIdentifier: "ScreenshotCell", cellType: ScreenshotCell.self)) { _, item, cell in
+            .bind(to: iPadCollectionView.rx.items(cellIdentifier: "DetailScreenshotCell", cellType: DetailScreenshotCell.self)) { _, item, cell in
                 cell.bind(item)
                 cell.imageView.heightAnchor.constraint(equalToConstant: self.iPhoneCollectionView.frame.height - 10).isActive = true
                 cell.imageView.widthAnchor.constraint(equalToConstant: 300).isActive = true
@@ -151,7 +150,7 @@ extension DetailViewController {
         }.disposed(by: bag)
         
         addAction(to: shareButton) {
-            if let shareUrl = dto.shareUrl {
+            if let shareUrl = dto.trackViewUrl {
                 let activityController = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
                 self.present(activityController, animated: true, completion: nil)
             }
@@ -166,7 +165,7 @@ extension DetailViewController {
         }
         
         addAction(to: showDeveloperAppButton) {
-            if let artistViewUrl = data.artistViewUrl,
+            if let artistViewUrl = dto.artistViewUrl,
                UIApplication.shared.canOpenURL(artistViewUrl) {
                 UIApplication.shared.open(artistViewUrl, options: [:], completionHandler: nil)
             }

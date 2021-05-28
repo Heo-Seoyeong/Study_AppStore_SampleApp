@@ -7,17 +7,24 @@
 
 import UIKit
 
-class SearchResultCell: UITableViewCell {
+import RxSwift
+import RxCocoa
+
+class SearchResultCell: BaseTableViewCell {
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var ratingView: UIView!
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var openButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
     @IBOutlet weak var reviewLabel: UILabel!
-
+    @IBOutlet weak var openButton: UIButton!
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     private lazy var screenshotList: [URL] = []
+    
+    override func commonInit() {
+        collectionView.rx.setDelegate(self)
+            .disposed(by: bag)
+    }
     
 }
 
@@ -34,23 +41,12 @@ extension SearchResultCell {
         }
      
         screenshotList = vm.screenshotList
-        self.collectionView.reloadData()
-    }
-    
-}
-
-extension SearchResultCell: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return screenshotList.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ScreenshotCell", for: indexPath)
-        if let cell = cell as? ScreenshotCell {
-            cell.bind(screenshotList[indexPath.item])
-        }
-        return cell
+        
+        Observable.of(vm.screenshotList)
+            .bind(to: collectionView.rx.items(cellIdentifier: "ListScreenshotCell", cellType: ListScreenshotCell.self)) { _, item, cell in
+                cell.bind(item)
+            }
+            .disposed(by: bag)
     }
     
 }
@@ -65,28 +61,6 @@ extension SearchResultCell: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5
-    }
-    
-}
-
-//
-//extension URL {
-//
-//    var image: UIImage {
-//
-//    }
-//
-//}
-
-extension UIImage {
- 
-    convenience init?(url: URL) {
-        do {
-            let data = try Data(contentsOf: url, options: .mappedIfSafe)
-            self.init(data: data)
-        } catch {
-            self.init()
-        }
     }
     
 }

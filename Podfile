@@ -7,6 +7,7 @@ def shared_pods
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'RxAlamofire'
+  pod 'RxDataSources'
 end
 
 target 'appStore' do
